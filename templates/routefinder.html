@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="static/css/logreg.css">
+    <title>Routefinder</title>
+  </head>
+  <body>
+    <div class="routefinder-heading">
+      <h1>National Trust Route Finder</h1>
+      <h2>Welcome, <cb>{{ username }}</cb></h2>
+    </div>
+    <div class="container">
+      <form action="/routefinder" method="POST">
+        <label for="postcode">Postcode</label>
+        <input type="text" id="postcode" name="postcode"><br><br>
+        <label for="activity">Activity</label>
+        <select id="activity" name="activity">
+          <option disabled selected value></option>
+          <option value="Dog walking">Dog walking</option>
+          <option value="Running">Running</option>
+          <option value="Walking">Walking</option>
+          <option value="Geocaching">Geocaching</option>
+          <option value="Cycling">Cycling</option>
+          <option value="Horse riding">Horse riding</option>
+          <option value="Canoeing and kayaking">Canoeing and kayaking</option>
+          <option value="Climbing">Climbing</option>
+          <option value="Orienteering">Orienteering</option>
+          <option value="Caving">Caving</option>
+          <option value="Surfing">Surfing</option>
+          <option value="Swimming">Swimming</option>
+          <option value="Coasteering">Coasteering</option>
+          <option value="Sailing">Sailing</option>
+          <option value="Fishing">Fishing</option>
+          <option value="Archery">Archery</option>
+          <option value="Boating">Boating</option>
+        </select><br><br>
+        <label for="radius">Radius (km)</label>
+        <input type="text" id="radius" name="radius"><br><br>
+        <input type="submit" value="Find Places">
+        <input type="hidden" id="username" name="username" value="{{ username }}"><br><br>
+      </form>
+    </div>
+    <br>
+    <div class="result-container">
+      <h2>Results:</h2>
+      <cb>{{ result|safe }}</cb>
+    </div>
+  </body>
+</html>
