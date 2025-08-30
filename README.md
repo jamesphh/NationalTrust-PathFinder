@@ -2,7 +2,7 @@ This project showcases front-end web development using HTML, CSS and JS as well 
 It finds the user National Trust locations based upon certain parameters they select and then finds the shortest path between them.
 
 This project includes:
-a login system, storing the users username and encryped password in an SQLite database;
+a login system, storing the users username and encrypted password in an SQLite database;
 JSON handling to retrieve infrormation about the various locations;
 mathematical equations to find the great circle distance between locations from the coordinates;
 an API to retrieve the users coordinates from the postcode they enter;
