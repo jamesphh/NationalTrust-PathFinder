@@ -1,31 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Register</title>
-  <link rel="stylesheet" type="text/css" href="static/css/logreg.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/logreg.css') }}">
 </head>
-  <body>
-    <div class="container">
-      <h1>Register</h1>
-      <form name="registerForm" onsubmit="return validateForm()" action="/register" method="post">
-        <div class="form-group">
-          <label for="username">Username:</label>
-          <input type="text" id="username" name="username">
-          <div id="usernameError" class="error"></div>
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password">
-          <div id="passwordError" class="error"></div>
-          <input type="checkbox" id="togglePassword" onclick="togglePasswordVisibility()">
-          <label for="togglePassword">Show password</label>
-        </div>
-        <center>
-          <input type="submit" value="Submit">
-        </center>
-      </form>
-    </div>
-    <script src="static/js/passwordVisible.js"></script>
-    <script src="static/js/validation.js"></script>
-  </body>
+<body>
+  <div class="container">
+    <h1>Register</h1>
+    <form name="registerForm" onsubmit="return validateForm()" action="{{ url_for('register') }}" method="post">
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <div id="usernameError" class="error"></div>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <div id="passwordError" class="error"></div>
+
+        <input type="checkbox" id="togglePassword" onclick="togglePasswordVisibility()">
+        <label for="togglePassword">Show password</label>
+      </div>
+      <div class="submitButton">
+        <input type="submit" value="Submit">
+      </div>
+    </form>
+  </div>
+  <script src="{{ url_for('static', filename='js/passwordVisible.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+</body>
 </html>
