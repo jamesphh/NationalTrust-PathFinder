@@ -1,44 +1,49 @@
 import hashlib
+import os
 import sqlite3
 
 
 class accountLogin:
     def __init__(self):
-        # Connect to the database and create a cursor object
         self.conn = sqlite3.connect("database.db")
         self.c = self.conn.cursor()
 
+    def __del__(self):
+        self.conn.close()
+
     def userExists(self, username):
-        # Check if the username exists in the database
-        self.c.execute("SELECT * FROM users WHERE username = ?", (username,))
-        data = self.c.fetchall()
-        if len(data) == 0:
-            return False
-        else:
-            return True
+        self.c.execute("SELECT 1 FROM users WHERE username = ? LIMIT 1", (username,))
+        return self.c.fetchone() is not None
+
+    def hashPassword(self, password, salt=None):
+        """Generate a salted PBKDF2 hash of the password."""
+        if salt is None:
+            salt = os.urandom(16)  # 128-bit salt
+        hashed = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 100_000)
+        return salt.hex() + ":" + hashed.hex()
+
+    def verifyPassword(self, password, stored_hash):
+        """Check a password against the stored hash."""
+        salt_hex, hashed_hex = stored_hash.split(":")
+        salt = bytes.fromhex(salt_hex)
+        new_hash = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 100_000)
+        return new_hash.hex() == hashed_hex
 
     def createUser(self, username, password):
-        # Create a new user if the username and password are valid and the username does not already exist
         if not self.userExists(username):
-            # Hash the password using the SHA-256 algorithm
-            hashedPassword = hashlib.sha256(password.encode()).hexdigest()
-            self.c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashedPassword))
+            hashedPassword = self.hashPassword(password)
+            self.c.execute(
+                "INSERT INTO users (username, password) VALUES (?, ?)",
+                (username, hashedPassword),
+            )
             self.conn.commit()
             return True
-        else:
-            return False
+        return False
 
     def login(self, username, password):
-        # Check if the provided username and password match the stored values
         self.c.execute("SELECT password FROM users WHERE username = ?", (username,))
-        data = self.c.fetchone()
-        if data is not None:
-            # Retrieve the hashed password from the database
-            hashedPassword = data[0]
-            # Hash the provided password and compare it to the stored hashed password
-            if hashlib.sha256(password.encode()).hexdigest() == hashedPassword:
-                return True
-            else:
-                return False
-        else:
-            return False
+        row = self.c.fetchone()
+        if row:
+            stored_hash = row[0]
+            return self.verifyPassword(password, stored_hash)
+        return False
