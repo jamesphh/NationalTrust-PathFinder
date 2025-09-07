@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from accountlogin import accountLogin
 from routefinder import RouteFinder
 
@@ -40,11 +40,12 @@ def register():
 
 
 result = None
+route_data = None  # structured route dictionary
 
 
 @app.route('/routefinder', methods=['GET', 'POST'])
 def routefinder():
-    global result
+    global result, route_data
     username = request.args.get('user')
     if request.method == 'POST':
         postcode = request.form['postcode']
@@ -52,9 +53,18 @@ def routefinder():
         radius = int(request.form['radius'])
         username = request.form['username']
         routefinder = RouteFinder(activity, postcode, radius)
-        result = routefinder.solve()
+        result, route_data = routefinder.solve()  # string + dict
     return render_template('routefinder.html', result=result, username=username)
 
 
+@app.route('/api/route', methods=['GET'])
+def api_route():
+    # Returns the last computed structured route data as JSON
+    global route_data
+    if route_data is None:
+        return jsonify({"error": "No route calculated yet"}), 400
+    return jsonify(route_data)
+
+
 if __name__ == '__main__':
-    app.run(debug=True, port='3000', host='0.0.0.0')
+    app.run(debug=True, port=3000, host='0.0.0.0')
