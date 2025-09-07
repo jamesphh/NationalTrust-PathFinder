@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <link rel="stylesheet" type="text/css" href="static/css/logreg.css">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/logreg.css') }}">
   </head>
   <body>
-    <center>
-      <div class="container">
-        <h1 class="title">Welcome to the National Trust Route Finder!</h1>
-        <p class="description">
-          You can either <a href="register">register</a> or <a href="login">login</a>.
-        </p>
-      </div>
-    </center>
+    <div class="container">
+      <h1 class="title">Welcome to the National Trust Route Finder!</h1>
+      <p class="description">
+        You can either <a href="{{ url_for('register') }}">register</a> or <a href="{{ url_for('login') }}">login</a>.
+      </p>
+    </div>
   </body>
 </html>
