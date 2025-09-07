@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <link rel="stylesheet" type="text/css" href="static/css/logreg.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Routefinder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/logreg.css') }}">
   </head>
   <body>
     <div class="routefinder-heading">
       <h1>National Trust Route Finder</h1>
-      <h2>Welcome, <cb>{{ username }}</cb></h2>
+      <h2>Welcome, <span class="username">{{ username }}</span></h2>
     </div>
     <div class="container">
-      <form action="/routefinder" method="POST">
+      <form action="{{ url_for('routefinder') }}" method="POST">
         <label for="postcode">Postcode</label>
-        <input type="text" id="postcode" name="postcode"><br><br>
+        <input type="text" id="postcode" name="postcode" required><br><br>
+
         <label for="activity">Activity</label>
-        <select id="activity" name="activity">
+        <select id="activity" name="activity" required>
           <option disabled selected value></option>
           <option value="Dog walking">Dog walking</option>
           <option value="Running">Running</option>
@@ -34,16 +37,18 @@
           <option value="Archery">Archery</option>
           <option value="Boating">Boating</option>
         </select><br><br>
+
         <label for="radius">Radius (km)</label>
-        <input type="text" id="radius" name="radius"><br><br>
+        <input type="number" id="radius" name="radius" min="1" required><br><br>
+
+        <input type="hidden" id="username" name="username" value="{{ username }}">
         <input type="submit" value="Find Places">
-        <input type="hidden" id="username" name="username" value="{{ username }}"><br><br>
       </form>
     </div>
     <br>
     <div class="result-container">
       <h2>Results:</h2>
-      <cb>{{ result|safe }}</cb>
+      <span class="result">{{ result|safe }}</span>
     </div>
   </body>
 </html>
